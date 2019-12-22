@@ -1,98 +1,102 @@
 <template>
-  <div class="container">
-    <h1> Your Todo List </h1>
-    <md-card class="todoBox">
-      <md-field>
-        <md-input v-model="currentTodo" @keydown.enter="addTodo()" placeholder="Add an item to your todo list"></md-input>
-      </md-field>
+  <div class='container'>
+      <h1>To Do List</h1>
+      <md-card class="cardBox">
+          <md-field>
+            <md-input v-model='currentTodo' @keydown.enter='addTodo(todo)' placeholder='Add a todo'></md-input>
+          </md-field>
+              <div class='todoBox'>
+                <li v-for='(todo, index) in todos' :key='todo.id'>
+                  <input class='completeButton' type='checkbox' v-model='todo.completed' >
 
-      <div class="todos">
-        <li v-for="todo in todos" :key="todo.id">
+                      <span class="todo-item-label" :class='{completed: todo.completed}' @dblclick='editTodo(todo)' v-if="!todo.edit">
+                          {{todo.label}}
+                      </span>
 
-          <input class ='completeButton' type='checkbox' v-model="todo.completed">
-            <span
-            class="todo-item-label"
-            :class='{completed: todo.completed}'
-            @dblclick='editTodo(todo)'
-            v-if="!todo.edit">
-              {{todo.label}}
-            </span>
-            <md-input v-else class="todo-item-edit"
-            type="text" v-model='todo.label'
-            @keyup.enter="completedEdit(todo)">
-          </md-input>
-
-          <md-raised class='closeButton' @click="removeTodo(index)">X</md-raised>
-        </li>
-      </div>
-
-    </md-card>
+                        <md-input v-else class="todo-item-edit" type="text" v-model='todo.label' @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.escape="doneEdit(todo)">
+                        </md-input>
+                  <md-raised class='closeButton' @click="removeTodo(index)">X</md-raised>
+                </li>
+              </div>
+      </md-card>
   </div>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      todos: [],
+      todos: [
+        {
+          'id': 1,
+          'label': 'Make a Vue website app',
+          'completed': true,
+          'edit': false
+        },
+      ],
       currentTodo: '',
       editedTodo: null
-    };
+    }
   },
   methods: {
-    addTodo() {
-      this.todos.push({
-        id: this.todos.length,
-        label: this.currentTodo,
-        completed: false,
-        edit: false
+      addTodo() {
+
+        if (this.currentTodo.trim() == 0) {
+          return
+        }
+        this.todos.push({
+          id:this.todos.length,
+          label: this.currentTodo,
+          completed: false,
+          edit: false
         });
-      this.currentTodo = ''
-    },
-    removeTodo(index) {
-      this.todos.splice(index, 1);
-    },
-    editTodo(todo) {
-     todo.edit = true;
-    },
-    completedEdit(todo) {
-      todo.edit = false;
-    }
+        this.currentTodo = '';
+      },
+      removeTodo(index) {
+        this.todos.splice(index,1)
+      },
+      editTodo(todo) {
+        todo.edit = true
+      },
+      doneEdit(todo) {
+        todo.edit = false
+      }
   }
-};
+}
 </script>
 
 <style>
+
+#app {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+
 li {
   list-style: none;
 }
 .container {
+  width: 50%;
   margin: auto;
   text-align: center;
-  width: 50%;
 }
+
 .completed {
   text-decoration: line-through;
 }
 .todoBox {
   font-size: 1.5em;
-  padding: 0px 5px 2px 5px;
 }
 .cardBox {
-padding: 5px;
+padding: 10px;
 }
+
 .closeButton {
-  float: left;
-}
-.closeButton:hover {
-  cursor: pointer;
-  transition: 0.2s ease;
-    color: red
-}
-.completeButton {
   float: right;
 }
-.todos {
-  margin: 10px;
+
+.completeButton {
+  float: left;
 }
+
 </style>
