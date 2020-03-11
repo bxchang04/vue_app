@@ -1,3 +1,10 @@
+Make a list of those important to do items. Modify them as needed, and strike them off your list upon completion.
+
+Framework: Vue.js
+
+Link: https://bxchang04.github.io/vue_app
+
+
 # todo
 
 ## Project setup
